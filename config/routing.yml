@@ -1,4 +1,4 @@
-editlog_controller:
+towen_editlog_controller:
     path: /editlog/{post_id}
     defaults: { _controller: towen.editlog.controller:handle }
 

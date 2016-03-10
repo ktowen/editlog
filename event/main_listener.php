@@ -110,7 +110,7 @@ class main_listener implements EventSubscriberInterface
 
         if (!empty($post_row['EDITED_MESSAGE']) && $this->auth->acl_get('m_view_editlog', $event['row']['forum_id']))
         {
-            $url = $this->helper->route('editlog_controller', array('post_id' => $post_row['POST_ID']));
+            $url = $this->helper->route('towen_editlog_controller', array('post_id' => $post_row['POST_ID']));
             $post_row['EDITED_MESSAGE'] .= $this->user->lang('VIEW_EDIT_LOG', $url);
         }
 

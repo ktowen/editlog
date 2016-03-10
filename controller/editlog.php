@@ -102,7 +102,7 @@ class editlog
         $topic_id = $row['topic_id'];
         $post_subject = censor_text($row['post_subject']);
         $post_url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", "f={$forum_id}&amp;t={$topic_id}&amp;p={$post_id}#p{$post_id}");
-        $u_action = $this->helper->route('editlog_controller', array('post_id' => $post_id));
+        $u_action = $this->helper->route('towen_editlog_controller', array('post_id' => $post_id));
 
         if (!$this->auth->acl_get('m_view_editlog', $forum_id))
         {

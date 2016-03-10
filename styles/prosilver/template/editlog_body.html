@@ -1,0 +1,53 @@
+<!-- INCLUDECSS @towen_editlog/editlog.css -->
+<!-- INCLUDE overall_header.html -->
+
+<h2>{L_EDIT_LOG}</h2>
+<h4>{L_POST_TITLE}: <a href="{U_POST}">{POST_SUBJECT}</a></h4>
+
+<form action="{U_ACTION}" method="POST" id="edit-compare">
+    <div class="forumbg forumbg-table">
+        <div class="inner">
+            <table class="table1">
+                <thead>
+                <tr>
+                    <th class="old-post">{L_OLD}</th>
+                    <th class="new-post">{L_NEW}</th>
+                    <th class="edit-user">{L_USER}</th>
+                    <th class="edit-reason">{L_EDIT_REASON}</th>
+                    <th class="edit-time">{L_EDIT_TIME}</th>
+                    <!-- IF S_DELETE --><th class="edit-delete">{L_DELETE}</th><!-- ENDIF -->
+                </tr>
+                </thead>
+                <tbody>
+                <!-- BEGIN edit -->
+                <tr class="<!-- IF edit.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+                    <td class="old-post"><!-- IF not edit.S_LAST_ROW --><input type="radio" name="old" value="{edit.EDIT_ID}" <!-- IF edit.EDIT_ID == OLD_POST or (not OLD_POST and (edit.S_ROW_COUNT + 2) == .edit)  -->checked="checked"<!-- ENDIF --> /><!-- ELSE --> <strong>{L_ACTUAL_MESSAGE}</strong> <!-- ENDIF --></td>
+                    <td class="new-post"><!-- IF not edit.S_FIRST_ROW --><input type="radio" name="new" value="{edit.EDIT_ID}" <!-- IF edit.EDIT_ID == NEW_POST or (not NEW_POST and edit.S_LAST_ROW) -->checked="checked"<!-- ENDIF --> /></td><!-- ENDIF -->
+                    <td class="edit-user">{edit.USERNAME}</td>
+                    <td class="edit-reason"><!-- IF edit.S_FIRST_ROW --><strong>{L_ORIGINAL_MESSAGE}</strong><!-- ELSE -->{edit.EDIT_REASON}<!-- ENDIF --></td>
+                    <td class="edit-time">{edit.EDIT_TIME}</td>
+                    <!-- IF S_DELETE--><td class="edit-delete"><!-- IF not edit.S_LAST_ROW--><input type="checkbox" name="edit_delete[]" value="{edit.EDIT_ID}" /><!-- ENDIF --></td><!-- ENDIF -->
+                </tr>
+                <!-- END edit -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <input type="submit" class="button1" name="compare" value="{L_COMPARE_VERSIONS}" />
+    <!-- IF S_DELETE --><input type="submit" class="button2" name="delete" value="{L_DELETE}" /><!-- ENDIF -->
+    {S_FORM_TOKEN}
+</form>
+
+<!-- IF CONTENT -->
+<div class="forabg">
+    <div class="inner">
+        <ul class="topiclist"><li class="header">
+            <dl><dt>{L_TEXT_CHANGES}</dt></dl>
+        </li></ul>
+        <div id="edit-content" class="bg2">{CONTENT}</div>
+    </div>
+</div>
+<br />
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

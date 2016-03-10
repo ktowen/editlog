@@ -1,0 +1,55 @@
+#edit-compare th{
+	padding: 5px 0;
+}
+
+#edit-compare {
+    margin: 20px 0;
+}
+
+#edit-content {
+    padding: 2px;
+    color: #282828;
+    font-size: 1.1em;
+}
+
+#edit-content span {
+	padding: 1px 0.8em;
+	margin: 1px;
+	display: inline-block;
+}
+
+.ins {
+	background-color: #b5ffa5;
+	border: solid 1px green;
+    color: green;
+}
+
+.ins::before {
+	content: " + ";
+	color: green;
+}
+
+.del {
+	background-color: #ffc8b9;
+	border: solid 1px red;
+    color: red;
+}
+
+.del::before {
+	content: " - ";
+	color: red;
+}
+
+.edit-user, .edit-time, .old-post, .new-post, .edit-delete {
+	text-align: center;
+}
+
+#edit-compare input.button1 {
+    float: left;
+    margin: 5px 0 30px 0;
+}
+
+#edit-compare input.button2 {
+    float: right;
+    margin: 5px 0 30px 0;
+}

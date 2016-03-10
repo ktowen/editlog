@@ -1,0 +1,6 @@
+editlog_controller:
+    path: /editlog/{post_id}
+    defaults: { _controller: towen.editlog.controller:handle }
+
+    requirements:
+      post_id: \d+

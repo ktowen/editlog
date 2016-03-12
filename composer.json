@@ -4,7 +4,7 @@
 	"description": "Allows moderators to view a history of edits to a message",
     "homepage": "https://phpbb-es.com/",
     "version": "1.0.0",
-    "time": "2016-3-10",
+    "time": "2016-03-10",
     "license": "GPL-2.0",
     "authors": [{
         "name": "Pedro Almirall",

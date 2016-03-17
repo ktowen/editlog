@@ -21,14 +21,11 @@ $lang = array_merge($lang, array(
     'VIEW_EDIT_LOG'			=> ' <a href="%1s">(Versions-Historie)</a>',
     'NO_EDIT_LOG'			=> 'Versionshitorie nicht speichern',
 
-    'ACTUAL_MESSAGE'			=> 'aktuell',
     'COMPARE_VERSIONS'			=> 'Vergleiche Versionen',
 
     'EDIT_LOG'			=> 'Versions-Historie',
     'POST_TITLE'			=> 'Beitrag',
 
-    'OLD'		=> 'alt',
-    'NEW'		=> 'neu',
     'USER'		=> 'Benutzer',
     'EDIT_TIME'				=> 'Bearbeitungszeitpunkt',
     'EDIT_REASON'	=> 'Bearbeitungsgrund',
@@ -36,11 +33,10 @@ $lang = array_merge($lang, array(
     'ORIGINAL_MESSAGE'			=> 'Original-Beitrag',
     'TEXT_CHANGES'	=> 'Änderungen im Text',
 
-    'EDIT_OPTIONS_EQUALS'			=> 'Bitte wähle zwei verschiedene Versionen zum Vergleichen aus.',
-    'NO_EDIT_OPTIONS'			=> 'Bitte wähle zwei Versionen zum Vergleichen aus.',
+    'EDITLOG_BAD_OPTIONS_COUNT'			=> 'Bitte wähle zwei Versionen zum Vergleichen aus.',
     'NO_POST_LOG'			=> 'Zu diesem Beitrag gibt es keine Versions-Historie. <a href="%1s">Zurück zum Beitrag</a>',
     'EDITLOG_NO_AUTH'			=> 'Du darfst die Versions-Historie dieses Beitrags nicht einsehen. <a href="%1s">Zurück zum Beitrag</a>',
     'EDITLOG_NO_DELETE_AUTH'	=> 'Du darfst keine Einträge aus der Versions-Historie löschen. <a href="%1s">Zurück</a>',
-    'EDITLOG_DELETE_SUCCESS'	=> 'Entries were deleted from edit . <a href="%1s">Back</a>',
+    'EDITLOG_DELETE_SUCCESS'	=> 'Entries were deleted from edit. <a href="%1s">Back</a>',
     'LOG_EDITLOG_DELETE_SUCCESS'	=> '<strong>Deleted editions history entry </strong><br />» <a href="%1s">%s2s</a>',
 ));

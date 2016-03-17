@@ -10,23 +10,19 @@
             <table class="table1">
                 <thead>
                 <tr>
-                    <th class="old-post">{L_OLD}</th>
-                    <th class="new-post">{L_NEW}</th>
+                    <th class="edit-check">{L_MARK}</th>
                     <th class="edit-user">{L_USER}</th>
                     <th class="edit-reason">{L_EDIT_REASON}</th>
                     <th class="edit-time">{L_EDIT_TIME}</th>
-                    <!-- IF S_DELETE --><th class="edit-delete">{L_DELETE}</th><!-- ENDIF -->
                 </tr>
                 </thead>
                 <tbody>
                 <!-- BEGIN edit -->
                 <tr class="<!-- IF edit.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-                    <td class="old-post"><!-- IF not edit.S_LAST_ROW --><input type="radio" name="old" value="{edit.EDIT_ID}" <!-- IF edit.EDIT_ID == OLD_POST or (not OLD_POST and (edit.S_ROW_COUNT + 2) == .edit)  -->checked="checked"<!-- ENDIF --> /><!-- ELSE --> <strong>{L_ACTUAL_MESSAGE}</strong> <!-- ENDIF --></td>
-                    <td class="new-post"><!-- IF not edit.S_FIRST_ROW --><input type="radio" name="new" value="{edit.EDIT_ID}" <!-- IF edit.EDIT_ID == NEW_POST or (not NEW_POST and edit.S_LAST_ROW) -->checked="checked"<!-- ENDIF --> /></td><!-- ENDIF -->
+                    <td class="edit-check"><input type="checkbox" name="option[]" value="{edit.EDIT_ID}" <!-- IF (OLD_POST and (edit.EDIT_ID == OLD_POST or edit.EDIT_ID == NEW_POST)) or (not OLD_POST and (edit.S_FIRST_ROW or edit.S_LAST_ROW)) -->checked="checked"<!-- ENDIF --></td>
                     <td class="edit-user">{edit.USERNAME}</td>
                     <td class="edit-reason"><!-- IF edit.S_FIRST_ROW --><strong>{L_ORIGINAL_MESSAGE}</strong><!-- ELSE -->{edit.EDIT_REASON}<!-- ENDIF --></td>
                     <td class="edit-time">{edit.EDIT_TIME}</td>
-                    <!-- IF S_DELETE--><td class="edit-delete"><!-- IF not edit.S_LAST_ROW--><input type="checkbox" name="edit_delete[]" value="{edit.EDIT_ID}" /><!-- ENDIF --></td><!-- ENDIF -->
                 </tr>
                 <!-- END edit -->
                 </tbody>
@@ -51,3 +47,18 @@
 <!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->
+
+<script type="text/javascript">
+    // <![CDATA[
+    $("input:checkbox").on('click', function(e) {
+        $checked = $("#edit-compare input:checked");
+        $this = $(this);
+        if ($checked.length > 2) {
+            $checked.not($this).prop('checked', false);
+        }
+        if ($this.prop('checked')) {
+            $this.prop('checked', true);
+        }
+    });
+    // ]]>
+</script>

@@ -112,78 +112,68 @@ class editlog
         // ACTION: compare
         if ($this->request->is_set_post('compare'))
         {
-            $old_version = $this->request->variable('old', 0);
-            $new_version = $this->request->variable('new', 0);
+            $options = $this->request->variable('option', array(0=>0));
 
-            if (($old_version && $new_version) && ($old_version != $new_version))
-            {
-                if ($new_version != -1 && $old_version > $new_version)
-                {
-                    $_tmp = $old_version;
-                    $old_version = $new_version;
-                    $new_version = $_tmp;
-                    unset($_tmp);
-                }
+			if (count($options) != 2)
+			{
+				$content = $this->user->lang['EDITLOG_BAD_OPTIONS_COUNT'];
+			}
+			else
+			{
+				sort($options);
 
-                $sql = 'SELECT old_text
-				        FROM ' . $this->table . "
-				        WHERE edit_id = {$old_version} AND post_id = {$post_id}";
-                $result = $this->db->sql_query($sql);
-                $old_text = $this->db->sql_fetchfield('old_text');
-                $this->db->sql_freeresult($result);
+				$sql = 'SELECT old_text
+						FROM ' . $this->table . "
+						WHERE edit_id = {$options[1]} AND post_id = {$post_id}";
+				$result = $this->db->sql_query($sql);
+				$old_text = $this->db->sql_fetchfield('old_text');
+				$this->db->sql_freeresult($result);
 
-                // -1 is the message in the posts table
-                if ($new_version == -1)
-                {
-                    $sql = 'SELECT post_text, bbcode_uid
-					        FROM ' . POSTS_TABLE . "
-					        WHERE post_id = {$post_id}";
-                    $result = $this->db->sql_query($sql);
-                    $row = $this->db->sql_fetchrow($result);
-                    $this->db->sql_freeresult($result);
+				// -1 is the message in the posts table
+				if ($options[0] == -1)
+				{
+					$sql = 'SELECT post_text, bbcode_uid
+							FROM ' . POSTS_TABLE . "
+							WHERE post_id = {$post_id}";
+					$result = $this->db->sql_query($sql);
+					$row = $this->db->sql_fetchrow($result);
+					$this->db->sql_freeresult($result);
 
-                    decode_message($row['post_text'], $row['bbcode_uid']);
-                    $new_text = $row['post_text'];
-                }
-                else
-                {
-                    $sql = 'SELECT old_text
-					        FROM ' . $this->table . "
-					        WHERE edit_id = {$new_version} AND post_id = {$post_id}";
-                    $result = $this->db->sql_query($sql);
-                    $new_text = $this->db->sql_fetchfield('old_text');
-                    $this->db->sql_freeresult($result);
-                }
+					decode_message($row['post_text'], $row['bbcode_uid']);
+					$new_text = $row['post_text'];
+				}
+				else
+				{
+					$sql = 'SELECT old_text
+							FROM ' . $this->table . "
+							WHERE edit_id = {$options[0]} AND post_id = {$post_id}";
+					$result = $this->db->sql_query($sql);
+					$new_text = $this->db->sql_fetchfield('old_text');
+					$this->db->sql_freeresult($result);
+				}
 
-                if (!$old_text || !$new_text)
-                {
-                    trigger_error($this->user->lang('NO_POST_LOG', $post_url), E_USER_WARNING);
-                }
+				if (!$old_text || !$new_text)
+				{
+					trigger_error($this->user->lang('NO_POST_LOG', $post_url), E_USER_WARNING);
+				}
 
-                include($this->root_path . 'includes/diff/diff.' . $this->php_ext);
-                include($this->root_path . 'includes/diff/engine.' . $this->php_ext);
-                include($this->root_path . 'includes/diff/renderer.' . $this->php_ext);
+				include($this->root_path . 'includes/diff/diff.' . $this->php_ext);
+				include($this->root_path . 'includes/diff/engine.' . $this->php_ext);
+				include($this->root_path . 'includes/diff/renderer.' . $this->php_ext);
 
-                $diff = new \diff($old_text, $new_text);
-                $renderer = new \diff_renderer_inline();
+				$diff = new \diff($old_text, $new_text);
+				$renderer = new \diff_renderer_inline();
 
-                $content = preg_replace('#^<pre>(.*?)</pre>$#s', '$1', $renderer->get_diff_content($diff));
-                $content = html_entity_decode($content);
-            }
-            elseif (!$old_version || !$new_version)
-            {
-                $content = $this->user->lang['NO_EDIT_OPTIONS'];
-            }
-            elseif ($old_version == $new_version)
-            {
-                $content = $this->user->lang['EDIT_OPTIONS_EQUALS'];
-            }
+				$content = preg_replace('#^<pre>(.*?)</pre>$#s', '$1', $renderer->get_diff_content($diff));
+				$content = html_entity_decode($content);
 
-            $this->template->assign_vars(array(
-                'CONTENT' => $content,
-                'OLD_POST' => $old_version,
-                'NEW_POST' => $new_version,
-            ));
+				$this->template->assign_vars(array(
+					'OLD_POST' => $options[1],
+					'NEW_POST' => $options[0],
+				));
+			}
+
+            $this->template->assign_var('CONTENT', $content);
         }
 
         // ACTION: delete
@@ -193,7 +183,7 @@ class editlog
             {
                 trigger_error($this->user->lang('EDITLOG_NO_DELETE_AUTH', $u_action), E_USER_WARNING);
             }
-            $edit_id_list = $this->request->variable('edit_delete', array(0=>0));
+            $edit_id_list = $this->request->variable('option', array(0=>0));
 
             if (sizeof($edit_id_list))
             {
@@ -214,7 +204,7 @@ class editlog
                 else
                 {
                     confirm_box(false, $this->user->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
-                        'edit_delete'	=> $edit_id_list,
+                        'option'	=> $edit_id_list,
                         'delete'		=> true,
                     )));
                 }

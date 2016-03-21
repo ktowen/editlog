@@ -80,7 +80,7 @@ class editlog
 
     /**
      *
-     * @param $post
+     * @param $post_id
      * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
      */
     public function handle($post_id)

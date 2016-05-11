@@ -268,23 +268,26 @@ class editlog
 
         while ($row = $this->db->sql_fetchrow($result))
         {
-			if ($post_have_log)
+			if (!$post_have_log)
 			{
-				$username = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
-				$edit_reason = $row['edit_reason'];
+				$edit_array = array(
+					'EDIT_TIME' => $this->user->format_date($original['post_time']),
+					'EDIT_REASON' => "<strong>{$this->user->lang['ORIGINAL_MESSAGE']}</strong>",
+					'USERNAME' => get_username_string('full', $original['p_user_id'], $original['p_username'], $original['p_user_colour']),
+				);
 			}
 			else
 			{
-				$username = get_username_string('full', $original['p_user_id'], $original['p_username'], $original['p_user_colour']);
-				$edit_reason = "<strong>{$this->user->lang['ORIGINAL_MESSAGE']}</strong>";
+				$edit_array = array(
+					'EDIT_TIME' => $this->user->format_date($row['edit_time']),
+					'EDIT_REASON' => $edit_reason = $row['edit_reason'],
+					'USERNAME' => get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+				);
 			}
 
-            $this->template->assign_block_vars('edit', array(
+            $this->template->assign_block_vars('edit', array_merge($edit_array, array(
                 'EDIT_ID' => $row['edit_id'],
-                'EDIT_TIME' => $this->user->format_date($row['edit_time']),
-                'EDIT_REASON' => $edit_reason,
-                'USERNAME' => $username,
-            ));
+            )));
 
 			$post_have_log = true;
         }

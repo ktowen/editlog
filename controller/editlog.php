@@ -120,18 +120,11 @@ class editlog
 			}
 			else
 			{
-				sort($options);
-
-				$sql = 'SELECT old_text
-						FROM ' . $this->table . "
-						WHERE edit_id = {$options[1]} AND post_id = {$post_id}";
-				$result = $this->db->sql_query($sql);
-				$old_text = $this->db->sql_fetchfield('old_text');
-				$this->db->sql_freeresult($result);
-
 				// -1 is the message in the posts table
-				if ($options[0] == -1)
+				if (in_array(-1, $options))
 				{
+					sort($options);
+
 					$sql = 'SELECT post_text, bbcode_uid
 							FROM ' . POSTS_TABLE . "
 							WHERE post_id = {$post_id}";
@@ -144,6 +137,8 @@ class editlog
 				}
 				else
 				{
+					rsort($options);
+
 					$sql = 'SELECT old_text
 							FROM ' . $this->table . "
 							WHERE edit_id = {$options[0]} AND post_id = {$post_id}";
@@ -152,20 +147,34 @@ class editlog
 					$this->db->sql_freeresult($result);
 				}
 
+				$sql = 'SELECT old_text
+						FROM ' . $this->table . "
+						WHERE edit_id = {$options[1]} AND post_id = {$post_id}";
+				$result = $this->db->sql_query($sql);
+				$old_text = $this->db->sql_fetchfield('old_text');
+				$this->db->sql_freeresult($result);
+
 				if (!$old_text || !$new_text)
 				{
 					trigger_error($this->user->lang('NO_POST_LOG', $post_url), E_USER_WARNING);
 				}
 
-				include($this->root_path . 'includes/diff/diff.' . $this->php_ext);
-				include($this->root_path . 'includes/diff/engine.' . $this->php_ext);
-				include($this->root_path . 'includes/diff/renderer.' . $this->php_ext);
+				if ($old_text == $new_text)
+				{
+					$content = html_entity_decode($old_text);
+				}
+				else
+				{
+					include($this->root_path . 'includes/diff/diff.' . $this->php_ext);
+					include($this->root_path . 'includes/diff/engine.' . $this->php_ext);
+					include($this->root_path . 'includes/diff/renderer.' . $this->php_ext);
 
-				$diff = new \diff($old_text, $new_text);
-				$renderer = new \diff_renderer_inline();
+					$diff = new \diff($old_text, $new_text);
+					$renderer = new \diff_renderer_inline();
 
-				$content = preg_replace('#^<pre>(.*?)</pre>$#s', '$1', $renderer->get_diff_content($diff));
-				$content = html_entity_decode($content);
+					$content = preg_replace('#^<pre>(.*?)</pre>$#s', '$1', $renderer->get_diff_content($diff));
+					$content = html_entity_decode($content);
+				}
 
 				$this->template->assign_vars(array(
 					'OLD_POST' => $options[1],
@@ -211,8 +220,33 @@ class editlog
             }
         }
 
-        // ACTION: show list
-        $sql_array = array(
+		// ACTION: show list
+
+		$sql_array = array(
+			'SELECT' => 'p.post_edit_time, p.post_edit_reason, p.post_edit_user, p.topic_id, p.post_time, u.username,
+            	u.user_colour, u2.user_id as p_user_id, u2.username as p_username, u2.user_colour as p_user_colour',
+			'FROM' => array(
+				POSTS_TABLE => 'p',
+			),
+			'LEFT_JOIN' => array(
+				array(
+					'FROM' => array(USERS_TABLE => 'u'),
+					'ON' => 'p.post_edit_user = u.user_id',
+				),
+				array(
+					'FROM' => array(USERS_TABLE => 'u2'),
+					'ON' => 'p.poster_id = u2.user_id',
+				),
+			),
+			'WHERE' => "p.post_id = {$post_id}",
+		);
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$original = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		$sql_array = array(
             'SELECT' => 'e.edit_id, e.user_id, e.edit_time, e.edit_reason, p.topic_id, p.post_subject, u.username, u.user_colour',
             'FROM' => array(
                 POSTS_TABLE => 'p',
@@ -234,48 +268,39 @@ class editlog
 
         while ($row = $this->db->sql_fetchrow($result))
         {
-            $post_have_log = true;
+			if ($post_have_log)
+			{
+				$username = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+				$edit_reason = $row['edit_reason'];
+			}
+			else
+			{
+				$username = get_username_string('full', $original['p_user_id'], $original['p_username'], $original['p_user_colour']);
+				$edit_reason = "<strong>{$this->user->lang['ORIGINAL_MESSAGE']}</strong>";
+			}
 
             $this->template->assign_block_vars('edit', array(
                 'EDIT_ID' => $row['edit_id'],
                 'EDIT_TIME' => $this->user->format_date($row['edit_time']),
-                'EDIT_REASON' => $row['edit_reason'],
-                'USERNAME' => get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+                'EDIT_REASON' => $edit_reason,
+                'USERNAME' => $username,
             ));
+
+			$post_have_log = true;
         }
         $this->db->sql_freeresult($result);
 
-        if (!$post_have_log)
+		$this->template->assign_block_vars('edit', array(
+			'EDIT_ID' => -1,
+			'EDIT_TIME' => $this->user->format_date($original['post_edit_time']),
+			'EDIT_REASON' => $original['post_edit_reason'],
+			'USERNAME' => get_username_string('full', $original['post_edit_user'], $original['username'], $original['user_colour']),
+		));
+
+		if (!$post_have_log)
         {
             trigger_error($this->user->lang('NO_POST_LOG', $post_url), E_USER_WARNING);
         }
-
-        // last version is in the posts table
-        $sql_array = array(
-            'SELECT' => 'p.post_edit_time, p.post_edit_reason, p.post_edit_user, p.topic_id, u.username, u.user_colour',
-            'FROM' => array(
-                POSTS_TABLE => 'p',
-            ),
-            'LEFT_JOIN' => array(
-                array(
-                    'FROM' => array(USERS_TABLE => 'u'),
-                    'ON' => 'p.post_edit_user = u.user_id',
-                ),
-            ),
-            'WHERE' => "p.post_id = {$post_id}",
-        );
-
-        $sql = $this->db->sql_build_query('SELECT', $sql_array);
-        $result = $this->db->sql_query($sql);
-        $row = $this->db->sql_fetchrow($result);
-        $this->db->sql_freeresult($result);
-
-        $this->template->assign_block_vars('edit', array(
-            'EDIT_ID' => -1,
-            'EDIT_TIME' => $this->user->format_date($row['post_edit_time']),
-            'EDIT_REASON' => $row['post_edit_reason'],
-            'USERNAME' => get_username_string('full', $row['post_edit_user'], $row['username'], $row['user_colour']),
-        ));
 
         // build navlinks
         $sql = 'SELECT forum_id, forum_type, forum_name, forum_desc, forum_desc_uid, forum_desc_bitfield,

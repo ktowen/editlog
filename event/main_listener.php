@@ -133,7 +133,6 @@ class main_listener implements EventSubscriberInterface
 
             if ($this->request->variable('no_edit_log', false) && $this->auth->acl_get('u_no_editlog'))
             {
-
                 unset($sql_data[POSTS_TABLE]['sql']['post_edit_time']);
                 unset($sql_data[POSTS_TABLE]['sql']['post_edit_reason']);
                 unset($sql_data[POSTS_TABLE]['sql']['post_edit_user']);
@@ -144,28 +143,28 @@ class main_listener implements EventSubscriberInterface
             }
             else
             {
-                $sql = 'SELECT post_text, bbcode_uid, post_edit_reason FROM ' . POSTS_TABLE . " WHERE post_id = {$event['data']['post_id']}";
+                $sql = 'SELECT post_text, bbcode_uid, post_edit_reason, post_edit_user, post_edit_time
+                 FROM ' . POSTS_TABLE . "
+                 WHERE post_id = {$event['data']['post_id']}";
+
                 $result = $this->db->sql_query($sql);
                 $old_post = $this->db->sql_fetchrow($result);
                 $this->db->sql_freeresult($result);
 
                 $sql_data[POSTS_TABLE]['sql']['post_edit_reason'] = trim($sql_data[POSTS_TABLE]['sql']['post_edit_reason']);
 
-                if ($old_post)
-                {
-                    decode_message($old_post['post_text'], $old_post['bbcode_uid']);
+				decode_message($old_post['post_text'], $old_post['bbcode_uid']);
 
-                    $insert_array = array(
-                        'post_id'	=> $event['data']['post_id'],
-                        'user_id'	=> (int) $this->user->data['user_id'],
-                        'old_text'	=> $old_post['post_text'],
-                        'edit_reason'	=> $old_post['post_edit_reason'],
-                        'edit_time'	=> $sql_data[POSTS_TABLE]['sql']['post_edit_time'],
-                    );
+				$insert_array = array(
+					'post_id'	=> $event['data']['post_id'],
+					'user_id'	=> $old_post['post_edit_user'],
+					'old_text'	=> $old_post['post_text'],
+					'edit_reason'	=> $old_post['post_edit_reason'],
+					'edit_time'	=> $old_post['post_edit_time'],
+				);
 
-                    $sql = 'INSERT INTO ' . $this->table . ' ' . $this->db->sql_build_array('INSERT', $insert_array);
-                    $this->db->sql_query($sql);
-                }
+				$sql = 'INSERT INTO ' . $this->table . ' ' . $this->db->sql_build_array('INSERT', $insert_array);
+				$this->db->sql_query($sql);
             }
 
             $event['sql_data'] = $sql_data;

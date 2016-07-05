@@ -13,12 +13,12 @@ class release_1_1_0 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['towen_editlog_version']);
+		return isset($this->config['towen_editlog_version']) && version_compare($this->config['towen_editlog_version'], '1.1.0', '>=');
 	}
 
 	static public function depends_on()
 	{
-		return array('\towen\editlog\migration\relase_1_0_0');
+		return array('\towen\editlog\migrations\release_1_0_0');
 	}
 
 	public function update_data()

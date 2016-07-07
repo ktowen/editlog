@@ -143,7 +143,7 @@ class main_listener implements EventSubscriberInterface
             }
             else
             {
-                $sql = 'SELECT post_text, bbcode_uid, post_edit_reason, post_edit_user, post_edit_time
+                $sql = 'SELECT post_text, bbcode_uid, post_edit_reason, post_edit_user, post_edit_time, post_subject
                  FROM ' . POSTS_TABLE . "
                  WHERE post_id = {$event['data']['post_id']}";
 
@@ -159,6 +159,7 @@ class main_listener implements EventSubscriberInterface
 					'post_id'	=> $event['data']['post_id'],
 					'user_id'	=> $old_post['post_edit_user'],
 					'old_text'	=> $old_post['post_text'],
+					'old_subject'	=> $old_post['post_subject'],
 					'edit_reason'	=> $old_post['post_edit_reason'],
 					'edit_time'	=> $old_post['post_edit_time'],
 				);

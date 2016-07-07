@@ -223,7 +223,7 @@ class editlog
 		// ACTION: show list
 
 		$sql_array = array(
-			'SELECT' => 'p.post_edit_time, p.post_edit_reason, p.post_edit_user, p.topic_id, p.post_time, u.username,
+			'SELECT' => 'p.post_edit_time, p.post_edit_reason, p.post_edit_user, p.post_subject, p.post_time, u.username,
             	u.user_colour, u2.user_id as p_user_id, u2.username as p_username, u2.user_colour as p_user_colour',
 			'FROM' => array(
 				POSTS_TABLE => 'p',
@@ -247,7 +247,7 @@ class editlog
 		$this->db->sql_freeresult($result);
 
 		$sql_array = array(
-            'SELECT' => 'e.edit_id, e.user_id, e.edit_time, e.edit_reason, p.topic_id, p.post_subject, u.username, u.user_colour',
+            'SELECT' => 'e.edit_id, e.user_id, e.edit_time, e.edit_reason, e.old_subject, u.username, u.user_colour',
             'FROM' => array(
                 POSTS_TABLE => 'p',
                 $this->table => 'e',
@@ -280,13 +280,14 @@ class editlog
 			{
 				$edit_array = array(
 					'EDIT_TIME' => $this->user->format_date($row['edit_time']),
-					'EDIT_REASON' => $edit_reason = $row['edit_reason'],
+					'EDIT_REASON' => $row['edit_reason'],
 					'USERNAME' => get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 				);
 			}
 
             $this->template->assign_block_vars('edit', array_merge($edit_array, array(
                 'EDIT_ID' => $row['edit_id'],
+				'OLD_SUBJECT'  => $row['old_subject'],
             )));
 
 			$post_have_log = true;
@@ -297,6 +298,7 @@ class editlog
 			'EDIT_ID' => -1,
 			'EDIT_TIME' => $this->user->format_date($original['post_edit_time']),
 			'EDIT_REASON' => $original['post_edit_reason'],
+			'OLD_SUBJECT' => $original['post_subject'],
 			'USERNAME' => get_username_string('full', $original['post_edit_user'], $original['username'], $original['user_colour']),
 		));
 

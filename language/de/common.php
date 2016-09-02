@@ -37,6 +37,6 @@ $lang = array_merge($lang, array(
     'NO_POST_LOG'			=> 'Zu diesem Beitrag gibt es keine Versions-Historie. <a href="%1s">Zurück zum Beitrag</a>',
     'EDITLOG_NO_AUTH'			=> 'Du darfst die Versions-Historie dieses Beitrags nicht einsehen. <a href="%1s">Zurück zum Beitrag</a>',
     'EDITLOG_NO_DELETE_AUTH'	=> 'Du darfst keine Einträge aus der Versions-Historie löschen. <a href="%1s">Zurück</a>',
-    'EDITLOG_DELETE_SUCCESS'	=> 'Entries were deleted from edit. <a href="%1s">Back</a>',
-    'LOG_EDITLOG_DELETE_SUCCESS'	=> '<strong>Deleted editions history entry </strong><br />» <a href="%1s">%s2s</a>',
+    'EDITLOG_DELETE_SUCCESS'	=> 'Einträge wurden gelöscht. <a href="%1s">Zurück</a>',
+    'LOG_EDITLOG_DELETE_SUCCESS'	=> '<strong>Löschte Einträge aus der Versions-Historie </strong><br />» <a href="%1s">%s2s</a>',
 ));

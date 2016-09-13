@@ -20,7 +20,7 @@
                 <tbody>
                 <!-- BEGIN edit -->
                 <tr class="<!-- IF edit.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-                    <td class="edit-check"><input type="checkbox" name="option[]" value="{edit.EDIT_ID}" <!-- IF (OLD_POST and (edit.EDIT_ID == OLD_POST or edit.EDIT_ID == NEW_POST)) or (not OLD_POST and (edit.S_FIRST_ROW or edit.S_LAST_ROW)) -->checked="checked"<!-- ENDIF --></td>
+                    <td class="edit-check"><input type="checkbox" name="option[]" value="{edit.EDIT_ID}" <!-- IF (OLD_POST and (edit.EDIT_ID == OLD_POST or edit.EDIT_ID == NEW_POST)) or (not OLD_POST and (edit.S_FIRST_ROW or edit.S_LAST_ROW)) -->checked="checked"<!-- ENDIF -->></input></td>
                     <td class="edit-user">{edit.USERNAME}</td>
                     <td class="edit-reason">{edit.EDIT_REASON}</td>
                     <td class="old-subject">{edit.OLD_SUBJECT}</td>

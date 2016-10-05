@@ -172,7 +172,7 @@ class editlog
 					$diff = new \diff($old_text, $new_text);
 					$renderer = new \diff_renderer_inline();
 
-					$content = preg_replace('#^<pre>(.*?)</pre>$#s', '$1', $renderer->get_diff_content($diff));
+					$content = nl2br($renderer->render($diff));
 					$content = html_entity_decode($content);
 				}
 
@@ -208,6 +208,17 @@ class editlog
                     );
                     $this->log->add('mod', $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_EDITLOG_DELETE_SUCCESS', false, $log_array);
 
+					$sql = "SELECT count(edit_id) as edit_count FROM {$this->table} WHERE post_id = {$post_id}";
+					$result = $this->db->sql_query_limit($sql, 1);
+					$edit_count = (int) $this->db->sql_fetchfield('edit_count');
+					$this->db->sql_freeresult($result);
+
+					if ($edit_count === 0) {
+						$sql = 'UPDATE ' . POSTS_TABLE . " SET post_edit_log = 0 WHERE post_id = {$post_id}";
+						$this->db->sql_query($sql);
+
+						$u_action = $post_url;
+					}
                     trigger_error($this->user->lang('EDITLOG_DELETE_SUCCESS', $u_action), E_USER_NOTICE);
                 }
                 else

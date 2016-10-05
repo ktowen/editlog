@@ -26,6 +26,7 @@ class main_listener implements EventSubscriberInterface
             'core.permissions' => 'add_permission',
             'core.delete_posts_in_transaction_before' => 'delete_posts',
             'core.modify_submit_post_data' => 'modify_submit_post_data',
+            'core.viewtopic_post_rowset_data' => 'viewtopic_post_rowset_data',
             'core.viewtopic_modify_post_row' => 'viewtopic_modify_post_row',
             'core.posting_modify_template_vars' => 'posting_modify_template_vars',
             'core.submit_post_modify_sql_data' => 'post_modify_sql_data',
@@ -104,11 +105,18 @@ class main_listener implements EventSubscriberInterface
         $event['data'] = $data;
     }
 
+	public function viewtopic_post_rowset_data($event)
+	{
+		$rowset_data = $event['rowset_data'];
+		$rowset_data['post_edit_log'] = $event['row']['post_edit_log'];
+		$event['rowset_data'] = $rowset_data;
+	}
+
     public function viewtopic_modify_post_row($event)
     {
         $post_row = $event['post_row'];
 
-        if (!empty($post_row['EDITED_MESSAGE']) && $this->auth->acl_get('m_view_editlog', $event['row']['forum_id']))
+        if ($event['row']['post_edit_log'] && $this->auth->acl_get('m_view_editlog', $event['row']['forum_id']))
         {
             $url = $this->helper->route('towen_editlog_controller', array('post_id' => $post_row['POST_ID']));
             $post_row['EDITED_MESSAGE'] .= $this->user->lang('VIEW_EDIT_LOG', $url);
@@ -126,8 +134,7 @@ class main_listener implements EventSubscriberInterface
 
     public function post_modify_sql_data($event)
     {
-        if ($event['post_mode'] == 'edit' || $event['post_mode'] == 'edit_first_post' ||
-            $event['post_mode'] == 'edit_last_post' || $event['post_mode'] == 'edit_topic')
+        if (in_array($event['post_mode'], array('edit', 'edit_first_post', 'edit_last_post', 'edit_topic')))
         {
             $sql_data = $event['sql_data'];
 
@@ -152,6 +159,7 @@ class main_listener implements EventSubscriberInterface
                 $this->db->sql_freeresult($result);
 
                 $sql_data[POSTS_TABLE]['sql']['post_edit_reason'] = trim($sql_data[POSTS_TABLE]['sql']['post_edit_reason']);
+                $sql_data[POSTS_TABLE]['sql']['post_edit_log'] = true;
 
 				decode_message($old_post['post_text'], $old_post['bbcode_uid']);
 

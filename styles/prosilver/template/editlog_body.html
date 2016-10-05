@@ -1,4 +1,5 @@
 <!-- INCLUDECSS @towen_editlog/editlog.css -->
+<!-- INCLUDEJS @towen_editlog/editlog.js -->
 <!-- INCLUDE overall_header.html -->
 
 <h2>{L_EDIT_LOG}</h2>
@@ -49,18 +50,3 @@
 <!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->
-
-<script type="text/javascript">
-    // <![CDATA[
-    $("input:checkbox").on('click', function(e) {
-        $checked = $("#edit-compare input:checked");
-        $this = $(this);
-        if ($checked.length > 2) {
-            $checked.not($this).prop('checked', false);
-        }
-        if ($this.prop('checked')) {
-            $this.prop('checked', true);
-        }
-    });
-    // ]]>
-</script>

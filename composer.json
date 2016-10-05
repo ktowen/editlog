@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Allows moderators to view a history of edits to a message",
     "homepage": "https://phpbb-es.com/",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "time": "2016-05-08",
     "license": "GPL-2.0",
     "authors": [{

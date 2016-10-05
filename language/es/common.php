@@ -34,9 +34,9 @@ $lang = array_merge($lang, array(
     'TEXT_CHANGES'	=> 'Cambios en el texto',
 
     'EDITLOG_BAD_OPTIONS_COUNT'			=> 'Debes seleccionar dos versiones para poder hacer una comparación.',
-    'NO_POST_LOG'			=> 'Este mensaje no tiene ediciones guardadas en el historial. <a href="%1s">Volver al mensaje</a>',
-    'EDITLOG_NO_AUTH'			=> 'No estás autorizado a ver el historial de ediciones de este mensaje. <a href="%1s">Volver al mensaje</a>',
-    'EDITLOG_NO_DELETE_AUTH'	=> 'No estás autorizado a borrar entradas del historial de ediciones. <a href="%1s">Volver</a>',
-    'EDITLOG_DELETE_SUCCESS'	=> 'Se borraron las entradas del historial de ediciones. <a href="%1s">Volver</a>',
+    'NO_POST_LOG'			=> 'Este mensaje no tiene ediciones guardadas en el historial.<br /><br /> <a href="%1s">Volver al mensaje</a>',
+    'EDITLOG_NO_AUTH'			=> 'No estás autorizado a ver el historial de ediciones de este mensaje.<br /><br /> <a href="%1s">Volver al mensaje</a>',
+    'EDITLOG_NO_DELETE_AUTH'	=> 'No estás autorizado a borrar entradas del historial de ediciones.<br /><br /> <a href="%1s">Volver</a>',
+    'EDITLOG_DELETE_SUCCESS'	=> 'Se borraron las entradas del historial de ediciones.<br /><br /> <a href="%1s">Volver</a>',
     'LOG_EDITLOG_DELETE_SUCCESS'	=> '<strong>Eliminada entrada del registro de ediciones</strong><br />» <a href="%1s">%s2s</a>',
 ));

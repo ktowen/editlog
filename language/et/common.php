@@ -35,9 +35,9 @@ $lang = array_merge($lang, array(
     'TEXT_CHANGES'	=> 'Muudatused tekstis',
 
     'EDITLOG_BAD_OPTIONS_COUNT'			=> 'Sa pead valima võrdlemiseks kaks versiooni.',
-    'NO_POST_LOG'			=> 'Sellel sõnumil ei ole salvestatud muudatusi ajalukku. <a href="%1s">Tagasi sõnumi juurde</a>',
-    'EDITLOG_NO_AUTH'			=> 'Sul ei ole õigusi vaadata muudatuse ajalugu antud postitusel. <a href="%1s">Tagasi sõnumi juurde</a>',
-    'EDITLOG_NO_DELETE_AUTH'	=> 'Sul ei ole õigusi kustutada muudatuste kirjeid ajaloos. <a href="%1s">Tagasi</a>',
-    'EDITLOG_DELETE_SUCCESS'	=> 'Kirjed on kustutatud muudatustest. <a href="%1s">Tagasi</a>',
+    'NO_POST_LOG'			=> 'Sellel sõnumil ei ole salvestatud muudatusi ajalukku.<br /><br /> <a href="%1s">Tagasi sõnumi juurde</a>',
+    'EDITLOG_NO_AUTH'			=> 'Sul ei ole õigusi vaadata muudatuse ajalugu antud postitusel.<br /><br /> <a href="%1s">Tagasi sõnumi juurde</a>',
+    'EDITLOG_NO_DELETE_AUTH'	=> 'Sul ei ole õigusi kustutada muudatuste kirjeid ajaloos.<br /><br /> <a href="%1s">Tagasi</a>',
+    'EDITLOG_DELETE_SUCCESS'	=> 'Kirjed on kustutatud muudatustest.<br /><br /> <a href="%1s">Tagasi</a>',
     'LOG_EDITLOG_DELETE_SUCCESS'	=> '<strong>Kustutatud muudatuste ajaloo kirje </strong><br />» <a href="%1s">%s2s</a>',
 ));

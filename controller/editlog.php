@@ -8,6 +8,7 @@
  */
 
 namespace towen\editlog\controller;
+use phpbb\exception\http_exception;
 
 class editlog
 {
@@ -81,6 +82,7 @@ class editlog
     /**
      *
      * @param $post_id
+	 * @throws \phpbb\exception\http_exception
      * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
      */
     public function handle($post_id)
@@ -95,7 +97,7 @@ class editlog
 
         if (empty($row))
         {
-            trigger_error('NO_TOPIC', E_USER_WARNING);
+            throw new http_exception(404, 'NO_TOPIC');
         }
 
         $forum_id = $row['forum_id'];
@@ -106,7 +108,7 @@ class editlog
 
         if (!$this->auth->acl_get('m_view_editlog', $forum_id))
         {
-            trigger_error($this->user->lang('EDITLOG_NO_AUTH', $post_url), E_USER_WARNING);
+            throw new http_exception(401, 'EDITLOG_NO_AUTH', array($post_url));
         }
 
         // ACTION: compare
@@ -156,7 +158,7 @@ class editlog
 
 				if (!$old_text || !$new_text)
 				{
-					trigger_error($this->user->lang('NO_POST_LOG', $post_url), E_USER_WARNING);
+					throw new http_exception(404, 'NO_POST_LOG', array($post_url));
 				}
 
 				if ($old_text == $new_text)
@@ -190,7 +192,7 @@ class editlog
         {
             if (!$this->auth->acl_get('m_delete_editlog', $forum_id))
             {
-                trigger_error($this->user->lang('EDITLOG_NO_DELETE_AUTH', $u_action), E_USER_WARNING);
+                throw new http_exception(401, 'EDITLOG_NO_DELETE_AUTH', array($u_action));
             }
             $edit_id_list = $this->request->variable('option', array(0=>0));
 
@@ -219,7 +221,7 @@ class editlog
 
 						$u_action = $post_url;
 					}
-                    trigger_error($this->user->lang('EDITLOG_DELETE_SUCCESS', $u_action), E_USER_NOTICE);
+                    throw new http_exception(200, 'EDITLOG_DELETE_SUCCESS', array($u_action));
                 }
                 else
                 {
@@ -315,7 +317,7 @@ class editlog
 
 		if (!$post_have_log)
         {
-            trigger_error($this->user->lang('NO_POST_LOG', $post_url), E_USER_WARNING);
+            throw new http_exception(404, 'NO_POST_LOG', array($post_url));
         }
 
         // build navlinks

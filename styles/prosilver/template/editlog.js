@@ -4,7 +4,4 @@ $("input:checkbox").on('click', function(e) {
     if ($checked.length > 2) {
         $checked.not($this).prop('checked', false);
     }
-    if ($this.prop('checked')) {
-        $this.prop('checked', true);
-    }
 });

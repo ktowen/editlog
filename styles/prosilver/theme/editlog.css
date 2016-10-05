@@ -7,20 +7,17 @@
 }
 
 #edit-content {
-    padding: 2px;
-    color: #282828;
-    font-size: 1.1em;
+    padding: 4px;
+    font-size: 1.3em;
 }
 
 #edit-content span {
 	padding: 1px 0.8em;
 	margin: 1px;
-	display: inline-block;
 }
 
 .ins {
 	background-color: #b5ffa5;
-	border: solid 1px green;
     color: green;
 }
 
@@ -31,7 +28,6 @@
 
 .del {
 	background-color: #ffc8b9;
-	border: solid 1px red;
     color: red;
 }
 

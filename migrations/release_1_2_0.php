@@ -35,4 +35,25 @@ class release_1_2_0 extends \phpbb\db\migration\migration
 
 		);
 	}
+	public function update_schema()
+	{
+		return array(
+			'add_columns'        => array(
+				$this->table_prefix . 'posts'        => array(
+					'post_edit_log'    => array('BOOL', 0, 'after' => 'post_edit_user'),
+				),
+			),
+		);
+	}
+
+	public function revert_schema()
+	{
+		return array(
+			'drop_columns'        => array(
+				$this->table_prefix . 'posts'        => array(
+					'post_edit_log',
+				),
+			),
+		);
+	}
 }

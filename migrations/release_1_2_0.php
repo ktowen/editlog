@@ -43,6 +43,11 @@ class release_1_2_0 extends \phpbb\db\migration\migration
 					'post_edit_log'    => array('BOOL', 0, 'after' => 'post_edit_user'),
 				),
 			),
+			'change_columns' => array(
+				$this->table_prefix . 'editlog' => array(
+					'old_subject' => array('VCHAR:255', ''),
+				),
+			),
 		);
 	}
 

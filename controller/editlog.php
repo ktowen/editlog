@@ -165,7 +165,8 @@ class editlog
 
 				if ($old_text == $new_text)
 				{
-					$content = html_entity_decode($old_text);
+					$content = nl2br($new_text);
+					$content = html_entity_decode($content);
 				}
 				else
 				{

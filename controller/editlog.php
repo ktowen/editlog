@@ -146,6 +146,7 @@ class editlog
 							WHERE edit_id = {$options[0]} AND post_id = {$post_id}";
 					$result = $this->db->sql_query($sql);
 					$new_text = $this->db->sql_fetchfield('old_text');
+					decode_message($new_text);
 					$this->db->sql_freeresult($result);
 				}
 
@@ -154,6 +155,7 @@ class editlog
 						WHERE edit_id = {$options[1]} AND post_id = {$post_id}";
 				$result = $this->db->sql_query($sql);
 				$old_text = $this->db->sql_fetchfield('old_text');
+				decode_message($old_text);
 				$this->db->sql_freeresult($result);
 
 				if (!$old_text || !$new_text)
@@ -163,7 +165,8 @@ class editlog
 
 				if ($old_text == $new_text)
 				{
-					$content = html_entity_decode($old_text);
+					$content = nl2br($new_text);
+					$content = html_entity_decode($content);
 				}
 				else
 				{

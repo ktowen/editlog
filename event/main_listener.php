@@ -161,8 +161,6 @@ class main_listener implements EventSubscriberInterface
                 $sql_data[POSTS_TABLE]['sql']['post_edit_reason'] = trim($sql_data[POSTS_TABLE]['sql']['post_edit_reason']);
                 $sql_data[POSTS_TABLE]['sql']['post_edit_log'] = true;
 
-				decode_message($old_post['post_text'], $old_post['bbcode_uid']);
-
 				$insert_array = array(
 					'post_id'	=> $event['data']['post_id'],
 					'user_id'	=> $old_post['post_edit_user'],

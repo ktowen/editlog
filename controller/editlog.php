@@ -82,7 +82,7 @@ class editlog
     /**
      *
      * @param $post_id
-	 * @throws \phpbb\exception\http_exception
+   * @throws \phpbb\exception\http_exception
      * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
      */
     public function handle($post_id)
@@ -116,76 +116,73 @@ class editlog
         {
             $options = $this->request->variable('option', array(0=>0));
 
-			if (count($options) != 2)
-			{
-				$content = $this->user->lang['EDITLOG_BAD_OPTIONS_COUNT'];
-			}
-			else
-			{
-				// -1 is the message in the posts table
-				if (in_array(-1, $options))
-				{
-					sort($options);
+  if (count($options) != 2)
+  {
+  $content = $this->user->lang['EDITLOG_BAD_OPTIONS_COUNT'];
+  }
+  else
+  {
+  // -1 is the message in the posts table
+  if (in_array(-1, $options))
+  {
+  sort($options);
 
-					$sql = 'SELECT post_text, bbcode_uid
-							FROM ' . POSTS_TABLE . "
-							WHERE post_id = {$post_id}";
-					$result = $this->db->sql_query($sql);
-					$row = $this->db->sql_fetchrow($result);
-					$this->db->sql_freeresult($result);
+  $sql = 'SELECT post_text, bbcode_uid
+  FROM ' . POSTS_TABLE . "
+  WHERE post_id = {$post_id}";
+  $result = $this->db->sql_query($sql);
+  $row = $this->db->sql_fetchrow($result);
+  $this->db->sql_freeresult($result);
 
-					decode_message($row['post_text'], $row['bbcode_uid']);
-					$new_text = $row['post_text'];
-				}
-				else
-				{
-					rsort($options);
+  decode_message($row['post_text'], $row['bbcode_uid']);
+  $new_text = $row['post_text'];
+  }
+  else
+  {
+  rsort($options);
 
-					$sql = 'SELECT old_text
-							FROM ' . $this->table . "
-							WHERE edit_id = {$options[0]} AND post_id = {$post_id}";
-					$result = $this->db->sql_query($sql);
-					$new_text = $this->db->sql_fetchfield('old_text');
-					decode_message($new_text);
-					$this->db->sql_freeresult($result);
-				}
+  $sql = 'SELECT old_text
+  FROM ' . $this->table . "
+  WHERE edit_id = {$options[0]} AND post_id = {$post_id}";
+  $result = $this->db->sql_query($sql);
+  $new_text = $this->db->sql_fetchfield('old_text');
+  $this->db->sql_freeresult($result);
+  }
 
-				$sql = 'SELECT old_text
-						FROM ' . $this->table . "
-						WHERE edit_id = {$options[1]} AND post_id = {$post_id}";
-				$result = $this->db->sql_query($sql);
-				$old_text = $this->db->sql_fetchfield('old_text');
-				decode_message($old_text);
-				$this->db->sql_freeresult($result);
+  $sql = 'SELECT old_text
+  FROM ' . $this->table . "
+  WHERE edit_id = {$options[1]} AND post_id = {$post_id}";
+  $result = $this->db->sql_query($sql);
+  $old_text = $this->db->sql_fetchfield('old_text');
+  $this->db->sql_freeresult($result);
 
-				if (!$old_text || !$new_text)
-				{
-					throw new http_exception(404, 'NO_POST_LOG', array($post_url));
-				}
+  if (!$old_text || !$new_text)
+  {
+  throw new http_exception(404, 'NO_POST_LOG', array($post_url));
+  }
 
-				if ($old_text == $new_text)
-				{
-					$content = nl2br($new_text);
-					$content = html_entity_decode($content);
-				}
-				else
-				{
-					include($this->root_path . 'includes/diff/diff.' . $this->php_ext);
-					include($this->root_path . 'includes/diff/engine.' . $this->php_ext);
-					include($this->root_path . 'includes/diff/renderer.' . $this->php_ext);
+  if ($old_text == $new_text)
+  {
+  $content = html_entity_decode($old_text);
+  }
+  else
+  {
+  include($this->root_path . 'includes/diff/diff.' . $this->php_ext);
+  include($this->root_path . 'includes/diff/engine.' . $this->php_ext);
+  include($this->root_path . 'includes/diff/renderer.' . $this->php_ext);
 
-					$diff = new \diff($old_text, $new_text);
-					$renderer = new \diff_renderer_inline();
+  $diff = new \diff($old_text, $new_text);
+  $renderer = new \diff_renderer_inline();
 
-					$content = nl2br($renderer->render($diff));
-					$content = html_entity_decode($content);
-				}
+  $content = nl2br($renderer->render($diff));
+  $content = html_entity_decode($content);
+  }
 
-				$this->template->assign_vars(array(
-					'OLD_POST' => $options[1],
-					'NEW_POST' => $options[0],
-				));
-			}
+  $this->template->assign_vars(array(
+  'OLD_POST' => $options[1],
+  'NEW_POST' => $options[0],
+  ));
+  }
 
             $this->template->assign_var('CONTENT', $content);
         }
@@ -213,17 +210,17 @@ class editlog
                     );
                     $this->log->add('mod', $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_EDITLOG_DELETE_SUCCESS', false, $log_array);
 
-					$sql = "SELECT count(edit_id) as edit_count FROM {$this->table} WHERE post_id = {$post_id}";
-					$result = $this->db->sql_query_limit($sql, 1);
-					$edit_count = (int) $this->db->sql_fetchfield('edit_count');
-					$this->db->sql_freeresult($result);
+  $sql = "SELECT count(edit_id) as edit_count FROM {$this->table} WHERE post_id = {$post_id}";
+  $result = $this->db->sql_query_limit($sql, 1);
+  $edit_count = (int) $this->db->sql_fetchfield('edit_count');
+  $this->db->sql_freeresult($result);
 
-					if ($edit_count === 0) {
-						$sql = 'UPDATE ' . POSTS_TABLE . " SET post_edit_log = 0 WHERE post_id = {$post_id}";
-						$this->db->sql_query($sql);
+  if ($edit_count === 0) {
+  $sql = 'UPDATE ' . POSTS_TABLE . " SET post_edit_log = 0 WHERE post_id = {$post_id}";
+  $this->db->sql_query($sql);
 
-						$u_action = $post_url;
-					}
+  $u_action = $post_url;
+  }
                     throw new http_exception(200, 'EDITLOG_DELETE_SUCCESS', array($u_action));
                 }
                 else
@@ -236,33 +233,33 @@ class editlog
             }
         }
 
-		// ACTION: show list
+  // ACTION: show list
 
-		$sql_array = array(
-			'SELECT' => 'p.post_edit_time, p.post_edit_reason, p.post_edit_user, p.post_subject, p.post_time, u.username,
+  $sql_array = array(
+  'SELECT' => 'p.post_edit_time, p.post_edit_reason, p.post_edit_user, p.post_subject, p.post_time, u.username,
             	u.user_colour, u2.user_id as p_user_id, u2.username as p_username, u2.user_colour as p_user_colour',
-			'FROM' => array(
-				POSTS_TABLE => 'p',
-			),
-			'LEFT_JOIN' => array(
-				array(
-					'FROM' => array(USERS_TABLE => 'u'),
-					'ON' => 'p.post_edit_user = u.user_id',
-				),
-				array(
-					'FROM' => array(USERS_TABLE => 'u2'),
-					'ON' => 'p.poster_id = u2.user_id',
-				),
-			),
-			'WHERE' => "p.post_id = {$post_id}",
-		);
+  'FROM' => array(
+  POSTS_TABLE => 'p',
+  ),
+  'LEFT_JOIN' => array(
+  array(
+  'FROM' => array(USERS_TABLE => 'u'),
+  'ON' => 'p.post_edit_user = u.user_id',
+  ),
+  array(
+  'FROM' => array(USERS_TABLE => 'u2'),
+  'ON' => 'p.poster_id = u2.user_id',
+  ),
+  ),
+  'WHERE' => "p.post_id = {$post_id}",
+  );
 
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = $this->db->sql_query($sql);
-		$original = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
+  $sql = $this->db->sql_build_query('SELECT', $sql_array);
+  $result = $this->db->sql_query($sql);
+  $original = $this->db->sql_fetchrow($result);
+  $this->db->sql_freeresult($result);
 
-		$sql_array = array(
+  $sql_array = array(
             'SELECT' => 'e.edit_id, e.user_id, e.edit_time, e.edit_reason, e.old_subject, u.username, u.user_colour',
             'FROM' => array(
                 POSTS_TABLE => 'p',
@@ -284,41 +281,41 @@ class editlog
 
         while ($row = $this->db->sql_fetchrow($result))
         {
-			if (!$post_have_log)
-			{
-				$edit_array = array(
-					'EDIT_TIME' => $this->user->format_date($original['post_time']),
-					'EDIT_REASON' => "<strong>{$this->user->lang['ORIGINAL_MESSAGE']}</strong>",
-					'USERNAME' => get_username_string('full', $original['p_user_id'], $original['p_username'], $original['p_user_colour']),
-				);
-			}
-			else
-			{
-				$edit_array = array(
-					'EDIT_TIME' => $this->user->format_date($row['edit_time']),
-					'EDIT_REASON' => $row['edit_reason'],
-					'USERNAME' => get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-				);
-			}
+  if (!$post_have_log)
+  {
+  $edit_array = array(
+  'EDIT_TIME' => $this->user->format_date($original['post_time']),
+  'EDIT_REASON' => "<strong>{$this->user->lang['ORIGINAL_MESSAGE']}</strong>",
+  'USERNAME' => get_username_string('full', $original['p_user_id'], $original['p_username'], $original['p_user_colour']),
+  );
+  }
+  else
+  {
+  $edit_array = array(
+  'EDIT_TIME' => $this->user->format_date($row['edit_time']),
+  'EDIT_REASON' => $row['edit_reason'],
+  'USERNAME' => get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
+  );
+  }
 
             $this->template->assign_block_vars('edit', array_merge($edit_array, array(
                 'EDIT_ID' => $row['edit_id'],
-				'OLD_SUBJECT'  => $row['old_subject'],
+  'OLD_SUBJECT'  => $row['old_subject'],
             )));
 
-			$post_have_log = true;
+  $post_have_log = true;
         }
         $this->db->sql_freeresult($result);
 
-		$this->template->assign_block_vars('edit', array(
-			'EDIT_ID' => -1,
-			'EDIT_TIME' => $this->user->format_date($original['post_edit_time']),
-			'EDIT_REASON' => $original['post_edit_reason'],
-			'OLD_SUBJECT' => $original['post_subject'],
-			'USERNAME' => get_username_string('full', $original['post_edit_user'], $original['username'], $original['user_colour']),
-		));
+  $this->template->assign_block_vars('edit', array(
+  'EDIT_ID' => -1,
+  'EDIT_TIME' => $this->user->format_date($original['post_edit_time']),
+  'EDIT_REASON' => $original['post_edit_reason'],
+  'OLD_SUBJECT' => $original['post_subject'],
+  'USERNAME' => get_username_string('full', $original['post_edit_user'], $original['username'], $original['user_colour']),
+  ));
 
-		if (!$post_have_log)
+  if (!$post_have_log)
         {
             throw new http_exception(404, 'NO_POST_LOG', array($post_url));
         }

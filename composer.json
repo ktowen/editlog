@@ -5,7 +5,7 @@
     "homepage": "https://phpbb-es.com/",
     "version": "1.2.1",
     "time": "2020-11-17",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Pedro Almirall",

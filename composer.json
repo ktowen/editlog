@@ -1,19 +1,22 @@
 {
-	"name": "towen/editlog",
-	"type": "phpbb-extension",
-	"description": "Allows moderators to view a history of edits to a message",
+    "name": "towen/editlog",
+    "type": "phpbb-extension",
+    "description": "Allows moderators to view a history of edits to a message",
     "homepage": "https://phpbb-es.com/",
-    "version": "1.2.0",
-    "time": "2016-05-08",
-    "license": "GPL-2.0",
-    "authors": [{
-        "name": "Pedro Almirall",
-        "email": "towenpa@gmail.com",
-        "homepage": "https://phpbb-es.com/",
-        "role": "Lead Developer"
-    }],
+    "version": "1.2.1",
+    "time": "2020-11-17",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Pedro Almirall",
+            "email": "towenpa@gmail.com",
+            "homepage": "https://phpbb-es.com/",
+            "role": "Lead Developer"
+        }
+    ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.7-RC1,<3.4@dev"
     },
     "require-dev": {
         "phpbb/epv": "dev-master"
@@ -21,7 +24,12 @@
     "extra": {
         "display-name": "Post Edit Log",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.7-RC1,<3.2@dev"
+            "phpbb/phpbb": ">=3.1.7-RC1,<3.4@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/post_edit_log_2",
+            "filename": "version_check"
         }
     }
 }

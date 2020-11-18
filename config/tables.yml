@@ -1,2 +1,2 @@
 parameters:
-    towen.editlog.tables.editlog: %core.table_prefix%editlog
+    towen.editlog.tables.editlog: '%core.table_prefix%editlog'

@@ -161,19 +161,19 @@ class main_listener implements EventSubscriberInterface
                 $sql_data[POSTS_TABLE]['sql']['post_edit_reason'] = trim($sql_data[POSTS_TABLE]['sql']['post_edit_reason']);
                 $sql_data[POSTS_TABLE]['sql']['post_edit_log'] = true;
 
-  decode_message($old_post['post_text'], $old_post['bbcode_uid']);
+                decode_message($old_post['post_text'], $old_post['bbcode_uid']);
 
-  $insert_array = array(
-    'post_id'	=> $event['data']['post_id'],
-    'user_id'	=> $old_post['post_edit_user'],
-    'old_text'	=> $old_post['post_text'],
-    'old_subject'	=> $old_post['post_subject'],
-    'edit_reason'	=> $old_post['post_edit_reason'],
-    'edit_time'	=> $old_post['post_edit_time'],
-  );
+                $insert_array = array(
+                  'post_id'	=> $event['data']['post_id'],
+                  'user_id'	=> $old_post['post_edit_user'],
+                  'old_text'	=> $old_post['post_text'],
+                  'old_subject'	=> $old_post['post_subject'],
+                  'edit_reason'	=> $old_post['post_edit_reason'],
+                  'edit_time'	=> $old_post['post_edit_time'],
+                );
 
-  $sql = 'INSERT INTO ' . $this->table . ' ' . $this->db->sql_build_array('INSERT', $insert_array);
-  $this->db->sql_query($sql);
+                $sql = 'INSERT INTO ' . $this->table . ' ' . $this->db->sql_build_array('INSERT', $insert_array);
+                $this->db->sql_query($sql);
             }
 
             $event['sql_data'] = $sql_data;

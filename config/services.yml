@@ -5,25 +5,25 @@ services:
     towen.editlog.controller:
         class: towen\editlog\controller\editlog
         arguments:
-            - @auth
-            - @config
-            - @controller.helper
-            - @dbal.conn
-            - @log
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            - %towen.editlog.tables.editlog%
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@dbal.conn'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%towen.editlog.tables.editlog%'
     towen.editlog.listener:
         class: towen\editlog\event\main_listener
         arguments:
-            - @auth
-            - @controller.helper
-            - @dbal.conn
-            - @request
-            - @user
-            - %towen.editlog.tables.editlog%
+            - '@auth'
+            - '@controller.helper'
+            - '@dbal.conn'
+            - '@request'
+            - '@user'
+            - '%towen.editlog.tables.editlog%'
         tags:
             - { name: event.listener }
